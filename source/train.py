@@ -1,14 +1,31 @@
 from sklearn import svm
 import numpy as np
-import os
-
-#FarCryNewDawn 2019-07-03 17-54-26-45.bmp
+import os 
+from sklearn.externals import joblib
+import time
 
 #https://scikit-learn.org/stable/modules/svm.html
 
-features_path = "../features/"
 
-feat_size = 25088
+# vgg16 / inception / mobilenet
+net_name = "vgg16" 
+
+if(net_name == "vgg16"):
+    feat_size = 25088
+
+if(net_name == "inception"):
+    feat_size = 51200
+
+if(net_name == "mobilenet"):
+    feat_size = 62720
+
+
+
+flabels=open('../models/labels_' + net_name + '.txt', 'w')
+start = time.time()
+
+features_path = "../features/" + net_name+"/"
+ 
 all_labels =  np.array([])
 all_features = np.empty((0, feat_size), float)
 
@@ -26,13 +43,32 @@ for fname in os.listdir(features_path):
 
     #create labels
     images_count =  features.shape[0]
+    print("images: " + str(images_count))
     labels = np.full((1, images_count), label)  
-
     #append labels
     all_labels = np.append(all_labels,  labels)
-  
-    label += 1
     
+    #write label to file
+    flabels.write("%s\n" % fname) 
+
+    label += 1
+
+flabels.close()
+        
+#TRAINING SVM
+#support vector classification SVC 
+# gamma='auto' uses 1 / n_features
+# gamma='scale' uses 1 / (n_features * X.var()) as value of gamma.
+
+print("Training model: " + str(all_features.shape))
+model = svm.SVC(gamma='scale')
+model.fit(all_features, all_labels) 
+
+#save
+joblib.dump(model, '../models/' + net_name + '.model')
+
+print("Execution time:" + str(time.time() - start))
+ 
 #todo
 # qui abbiamo il matricione di features + labels
 # dobbiamo fare il train della svm e salvare il modello in un file

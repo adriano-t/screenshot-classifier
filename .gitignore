@@ -1,1 +1,7 @@
 dset
+test
+*.bmp
+*.jpg
+*.png
+models
+features

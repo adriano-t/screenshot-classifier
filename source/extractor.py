@@ -7,21 +7,52 @@ from keras.applications.mobilenet_v2 import MobileNetV2
 from keras.applications.mobilenet_v2 import preprocess_input as preprocess_mobilenet
 import numpy as np
 import os
+import time
 
-
+start = time.time()
 dataset_path = "../dset/"
 features_path = "../features/"
-feat_size = 25088
+if(not os.path.exists(features_path)):
+    os.mkdir(features_path)
 
-print("Using VGG16 net")
-model = VGG16(weights='imagenet', include_top=False)
-#model.summary()
+
+# vgg16 / inception / mobilenet
+net_name = "vgg16" 
+
+if(net_name == "vgg16"):
+    modelClass = VGG16
+    preprocess_function = preprocess_vgg
+    feat_size = 25088
+
+if(net_name == "inception"):
+    modelClass = InceptionV3
+    preprocess_function = preprocess_inception
+    feat_size = 51200
+
+if(net_name == "mobilenet"):
+    modelClass = MobileNetV2
+    preprocess_function = preprocess_mobilenet
+    feat_size = 62720
+
+
+
+
+print("\n\n")
+print("===== Using " + net_name + " =====")
+model = modelClass(weights='imagenet', include_top=False) #model.summary() 
+print("\n\n")
+#create directory if not exists
+features_dir = features_path + net_name + "/"
+if(not os.path.exists(features_dir)):
+    os.mkdir(features_dir)
 
 #for takes all images on directories
 for game_dir in os.listdir(dataset_path):
-    out_path = features_path + "/" + game_dir  + ".np"
+
+    out_path =  features_dir  + game_dir  + ".np"
+
     if(os.path.exists(out_path)):
-        print(game_dir + " already exists")
+        print(game_dir + ": game features already extracted")
         continue
 
     feat_file = open(out_path, "wb+")
@@ -39,19 +70,19 @@ for game_dir in os.listdir(dataset_path):
             img_path = dataset_path + game_dir + "/" + image_name
             img = image.load_img(img_path, target_size=(224, 224))
             img_data = image.img_to_array(img)
-            img_data = np.expand_dims(img_data, axis=0) 
-            img_data = preprocess_vgg(img_data)
+            img_data = np.expand_dims(img_data, axis=0)
+            img_data = preprocess_function(img_data)
             
             #extract features
-            vgg16_feature = model.predict(img_data)
+            features =  model.predict(img_data).flatten() 
 
-            #add row to the features matrix
-            features = np.asmatrix(vgg16_feature.flatten())
+            #add row to the features matrix 
             all_features = np.append(all_features, np.asmatrix(features), axis=0)
             
             i += 1
-        except:
-            print("exception: skipped")
+            if(i > 100):
+                break
+        except Exception as e: print(e + ":skipped")
     
     np.save(feat_file,all_features)
     feat_file.close()
@@ -59,54 +90,11 @@ for game_dir in os.listdir(dataset_path):
     
 
 
+print("Execution time:" + str(time.time() - start))
+
 
 '''
-# Inizializzo il modello, preaddestrato su un enorme dataset di immagini
-# include_top = False significa che voglio usare il modello 
-# come un estrattore di feature e non come un classificatore
-model = VGG16(weights='imagenet', include_top=False)
-#model.summary() # stampa la struttura del modello
-
-# Ogni modello riscala l'immagine ad una dimensione prefissata:
-# Nel caso di rete VGG, 224x224
-img = image.load_img(img_path, target_size=(224, 224))
-img_data = image.img_to_array(img)
-img_data = np.expand_dims(img_data, axis=0)
-# i valori RGB dell'immagine vengono standardizzati
-img_data = preprocess_vgg(img_data)
-
-# Estrazione feature
-vgg16_feature = model.predict(img_data)
-print("VGG NET")
-print(vgg16_feature.flatten().shape)
-
-# Stesso discorso se voglio cambiare rete neurale
-model = InceptionV3(weights='imagenet', include_top=False)
-#model.summary() # stampa la struttura del modello
-
-img = image.load_img(img_path, target_size=(224, 224))
-img_data = image.img_to_array(img)
-img_data = np.expand_dims(img_data, axis=0)
-# i valori RGB dell'immagine vengono standardizzati
-img_data = preprocess_inception(img_data)
-
-inception_feature = model.predict(img_data)
-print("INCEPTION NET")
-print(inception_feature.flatten().shape)
-
-# Terza rete: mobilenet, spesso usata per applicazioni mobile
-model = MobileNetV2(weights='imagenet', include_top=False)
-
-img = image.load_img(img_path, target_size=(224, 224))
-img_data = image.img_to_array(img)
-img_data = np.expand_dims(img_data, axis=0)
-# i valori RGB dell'immagine vengono standardizzati
-img_data = preprocess_mobilenet(img_data)
-
-mobilenet_feature = model.predict(img_data)
-print("MOBILE NET")
-print(mobilenet_feature.flatten().shape)
-
 # Per un elenco delle possibili reti, si veda
 # la tabella "Documentation for individual models" su
-# https://keras.io/applications/'''
+# https://keras.io/applications/
+# '''
