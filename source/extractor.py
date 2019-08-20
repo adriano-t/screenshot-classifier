@@ -1,13 +1,14 @@
 from keras.preprocessing import image
-from keras.applications.vgg16 import VGG16
-from keras.applications.vgg16 import preprocess_input as preprocess_vgg
-from keras.applications.inception_v3 import InceptionV3
-from keras.applications.inception_v3 import preprocess_input as preprocess_inception
-from keras.applications.mobilenet_v2 import MobileNetV2
-from keras.applications.mobilenet_v2 import preprocess_input as preprocess_mobilenet
 import numpy as np
 import os
 import time
+
+crop = False
+if (crop):
+    crop_w = int(1920 / 5)
+    crop_h = int(1080 / 3)
+    crop_x = crop_w * 4
+    crop_y = crop_h * 2
 
 start = time.time()
 dataset_path = "../dset/"
@@ -17,24 +18,28 @@ if(not os.path.exists(features_path)):
 
 
 # vgg16 / inception / mobilenet
-net_name = "vgg16" 
+net_name = "inception"
 
 if(net_name == "vgg16"):
+    from keras.applications.vgg16 import VGG16
+    from keras.applications.vgg16 import preprocess_input as preprocess_vgg
     modelClass = VGG16
     preprocess_function = preprocess_vgg
     feat_size = 25088
 
 if(net_name == "inception"):
+    from keras.applications.inception_v3 import InceptionV3
+    from keras.applications.inception_v3 import preprocess_input as preprocess_inception
     modelClass = InceptionV3
     preprocess_function = preprocess_inception
     feat_size = 51200
 
 if(net_name == "mobilenet"):
+    from keras.applications.mobilenet_v2 import MobileNetV2
+    from keras.applications.mobilenet_v2 import preprocess_input as preprocess_mobilenet
     modelClass = MobileNetV2
     preprocess_function = preprocess_mobilenet
     feat_size = 62720
-
-
 
 
 print("\n\n")
@@ -67,8 +72,12 @@ for game_dir in os.listdir(dataset_path):
         try:
             #resize images for being used on vgg16
             print(str(i) + ") " + image_name)
-            img_path = dataset_path + game_dir + "/" + image_name
-            img = image.load_img(img_path, target_size=(224, 224))
+
+            img_path = dataset_path + game_dir + "/" + image_name 
+            img = image.load_img(img_path)
+            if (crop):
+                img = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h)) 
+            img = img.resize((224, 224))
             img_data = image.img_to_array(img)
             img_data = np.expand_dims(img_data, axis=0)
             img_data = preprocess_function(img_data)

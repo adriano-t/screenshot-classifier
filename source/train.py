@@ -8,7 +8,7 @@ import time
 
 
 # vgg16 / inception / mobilenet
-net_name = "vgg16" 
+net_name = "mobilenet" 
 
 if(net_name == "vgg16"):
     feat_size = 25088
@@ -61,7 +61,7 @@ flabels.close()
 # gamma='scale' uses 1 / (n_features * X.var()) as value of gamma.
 
 print("Training model: " + str(all_features.shape))
-model = svm.SVC(gamma='scale')
+model = svm.SVC(gamma='scale', probability=True)
 model.fit(all_features, all_labels) 
 
 #save
