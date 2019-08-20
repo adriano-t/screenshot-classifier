@@ -7,8 +7,6 @@ dirname = "../" + gameName + "/"
 if(not os.path.exists(dirname)):
     os.mkdir(dirname)
 
-
-
 while True:
     im = ImageGrab.grab()
     dt = datetime.now()

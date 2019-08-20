@@ -1,24 +1,38 @@
-from keras.preprocessing import image
-import numpy as np
-import os
-import time
 
-crop = False
-if (crop):
-    crop_w = int(1920 / 5)
-    crop_h = int(1080 / 3)
-    crop_x = crop_w * 4
-    crop_y = crop_h * 2
+import os
+import sys
+import time
+import numpy as np
+from keras.preprocessing import image
+import tensorflow.python.util.deprecation as deprecation
+deprecation._PRINT_DEPRECATION_WARNINGS = False
+ 
+net_name = sys.argv[1]
+crop_mode = sys.argv[2]
+
+if(crop_mode != "full"):
+    crop_modes = { 
+        "bottom-right":  (4/5, 2/3, 1, 1), 
+        "top-left":  (0, 0, 1/5, 1/3),
+        "top-right": (0, 2/3, 1/5, 1),
+        "bottom-left": (0, 2/3, 1/5, 1), 
+    }
+
+    mode = crop_modes[crop_mode]
+    crop_x1 = mode[0]
+    crop_y1 = mode[1]
+    crop_x2 = mode[2]
+    crop_y2 = mode[3]
 
 start = time.time()
 dataset_path = "../dset/"
 features_path = "../features/"
 if(not os.path.exists(features_path)):
     os.mkdir(features_path)
-
+    
 
 # vgg16 / inception / mobilenet
-net_name = "inception"
+
 
 if(net_name == "vgg16"):
     from keras.applications.vgg16 import VGG16
@@ -75,8 +89,9 @@ for game_dir in os.listdir(dataset_path):
 
             img_path = dataset_path + game_dir + "/" + image_name 
             img = image.load_img(img_path)
-            if (crop):
-                img = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h)) 
+            if(crop_mode != "full"): 
+                img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
+           
             img = img.resize((224, 224))
             img_data = image.img_to_array(img)
             img_data = np.expand_dims(img_data, axis=0)
@@ -91,7 +106,8 @@ for game_dir in os.listdir(dataset_path):
             i += 1
             if(i > 100):
                 break
-        except Exception as e: print(e + ":skipped")
+        except Exception as e:
+            print(e)
     
     np.save(feat_file,all_features)
     feat_file.close()
