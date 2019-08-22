@@ -3,7 +3,7 @@ import subprocess
 print("===========================")
 print("== Screenshot classifier")
 print("===========================")
-nets = ["vgg16", "inception", "mobilenet" ]
+nets = ["vgg16", "inception", "mobilenet","resnetv2", "nas" ]
 
 ############ NET ###############
 chosen = 0

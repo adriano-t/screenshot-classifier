@@ -1,7 +1,10 @@
 
 import os
+import sys
 import time
 import numpy as np
+from netinfo import *
+from datetime import datetime
 from keras.preprocessing import image
 from sklearn import svm
 from sklearn.externals import joblib
@@ -10,36 +13,71 @@ from sklearn.metrics import confusion_matrix
 
 start = time.time()
 
-crop = True
-if (crop):
-    crop_w = int(1920 / 5)
-    crop_h = int(1080 / 3)
-    crop_x = crop_w * 4
-    crop_y = crop_h * 2
 
-# vgg16 / inception / mobilenet
-net_name = "mobilenet" 
+net_name = sys.argv[1]
+crop_mode = sys.argv[2]
+ 
+print(crop_mode)
+
+if(crop_mode != "full"):
+    crop_modes = { 
+        "bottom-right":  (4/5, 2/3, 1, 1), 
+        "top-left":  (0, 0, 1/5, 1/3),
+        "top-right": (0, 2/3, 1/5, 1),
+        "bottom-left": (0, 2/3, 1/5, 1), 
+    }
+
+    mode = crop_modes[crop_mode]
+    crop_x1 = mode[0]
+    crop_y1 = mode[1]
+    crop_x2 = mode[2]
+    crop_y2 = mode[3]
+
+
+# Check if the model is trained
+if not os.path.exists('../models/labels_' + net_name + '.txt') or not os.path.exists('../models/'+net_name+'.model'):
+    print("Error: there is no trained model for " + net_name)
+
+# Create report file
+if not os.path.exists("../reports/"):
+    os.mkdir("../reports/")
+    #%m/%d/%Y, %H:%M:%S
+freport_name = "../reports/" + net_name + "_" + crop_mode + "_report_{}".format(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))
+freport = open(freport_name + ".txt", "w+")
+freport.write(net_name + " " + crop_mode + "\n")
+freport.write("FAILED:\n\n")
 
 if(net_name == "vgg16"):
     from keras.applications.vgg16 import VGG16
     from keras.applications.vgg16 import preprocess_input as preprocess_vgg
     modelClass = VGG16
-    preprocess_function = preprocess_vgg
-    feat_size = 25088
+    preprocess_function = preprocess_vgg 
 
 if(net_name == "inception"):
     from keras.applications.inception_v3 import InceptionV3
     from keras.applications.inception_v3 import preprocess_input as preprocess_inception
     modelClass = InceptionV3
-    preprocess_function = preprocess_inception
-    feat_size = 51200
+    preprocess_function = preprocess_inception 
 
 if(net_name == "mobilenet"):
     from keras.applications.mobilenet_v2 import MobileNetV2
     from keras.applications.mobilenet_v2 import preprocess_input as preprocess_mobilenet
     modelClass = MobileNetV2
-    preprocess_function = preprocess_mobilenet
-    feat_size = 62720
+    preprocess_function = preprocess_mobilenet 
+
+if(net_name == "resnetv2"):
+    from keras.applications.inception_resnet_v2 import InceptionResNetV2
+    from keras.applications.inception_resnet_v2 import preprocess_input as preprocess_resnetv2
+    modelClass = InceptionResNetV2
+    preprocess_function = preprocess_resnetv2 
+    
+if(net_name == "nas"):
+    from keras.applications.nasnet import NASNetLarge
+    from keras.applications.nasnet import preprocess_input as preprocess_nas
+    modelClass = NASNetLarge
+    preprocess_function = preprocess_nas
+
+feat_size = features_sizes[net_name]
 
 with open('../models/labels_' + net_name + '.txt') as f:
     labels_names = [line.strip() for line in f]
@@ -66,8 +104,9 @@ for dirname in os.listdir(test_path):
         img_path = test_path + dirname + "/" + fname 
         #img_path = "/home/empo/Scrivania/progettottr/dset/overwatch/Overwatch 2019-06-01 09-33-21-84.bmp"
         img = image.load_img(img_path)
-        if (crop):
-            img = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
+        if(crop_mode != "full"): 
+                img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
+           
         img = img.resize((224, 224))
         img_data = image.img_to_array(img)
         img_data = np.expand_dims(img_data, axis=0)
@@ -78,7 +117,7 @@ for dirname in os.listdir(test_path):
         label_truth = labels_names.index(dirname + ".np")
         label_predicted = model.predict(np.asmatrix(features)) 
         
-        print("probability: " + str(model.predict_proba(np.asmatrix(features)))) 
+        #print("probability: " + str(model.predict_proba(np.asmatrix(features)))) 
          
         y_true.append(label_truth) 
         y_pred.append(label_predicted)
@@ -86,11 +125,12 @@ for dirname in os.listdir(test_path):
             correct += 1
             print("[v] " + fname + " | predicted: " + str(labels_names[int(label_predicted)])) 
         else :
-            print("[ ] " + fname + " | predicted: " + str(labels_names[int(label_predicted)])) 
+            print("[ ] " + fname + " | predicted: " + str(labels_names[int(label_predicted)]))
+            freport.write(fname + " | predicted: " + str(labels_names[int(label_predicted)]) + "\n")
         count += 1
 
 print("ratio: " + str((correct / count) * 100) + "%")
-
+freport.write("\n----------------------\n\nRatio: " + str((correct / count) * 100) + "%")
 
 ##########################
 #### CONFUSION MATRIX ####
@@ -129,6 +169,7 @@ for i in range(cm.shape[0]):
                 color="white" if cm[i, j] > thresh else "black")
 fig.tight_layout()
 
-plt.show()
+#plt.show()
+plt.savefig(freport_name + ".png")
 
-print("Execution time:" + str(time.time() - start)) 
+print("Execution time:" + str(time.time() - start))

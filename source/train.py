@@ -1,24 +1,23 @@
-from sklearn import svm
-import numpy as np
+
 import os 
-from sklearn.externals import joblib
+import sys
 import time
+from netinfo import *
+import numpy as np
+from sklearn import svm
+from sklearn.externals import joblib
 
 #https://scikit-learn.org/stable/modules/svm.html
 
+net_name = sys.argv[1]
 
-# vgg16 / inception / mobilenet
-net_name = "mobilenet" 
+if os.path.exists('../models/labels_' + net_name + '.txt'):
+    exit
 
-if(net_name == "vgg16"):
-    feat_size = 25088
+feat_size = features_sizes[net_name]
 
-if(net_name == "inception"):
-    feat_size = 51200
-
-if(net_name == "mobilenet"):
-    feat_size = 62720
-
+if not os.path.exists('../models/'):
+    os.mkdir('../models/')
 
 
 flabels=open('../models/labels_' + net_name + '.txt', 'w')

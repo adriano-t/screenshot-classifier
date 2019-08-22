@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+from netinfo import *
 import numpy as np
 from keras.preprocessing import image
 import tensorflow.python.util.deprecation as deprecation
@@ -38,22 +39,34 @@ if(net_name == "vgg16"):
     from keras.applications.vgg16 import VGG16
     from keras.applications.vgg16 import preprocess_input as preprocess_vgg
     modelClass = VGG16
-    preprocess_function = preprocess_vgg
-    feat_size = 25088
+    preprocess_function = preprocess_vgg 
 
 if(net_name == "inception"):
     from keras.applications.inception_v3 import InceptionV3
     from keras.applications.inception_v3 import preprocess_input as preprocess_inception
     modelClass = InceptionV3
-    preprocess_function = preprocess_inception
-    feat_size = 51200
+    preprocess_function = preprocess_inception 
 
 if(net_name == "mobilenet"):
     from keras.applications.mobilenet_v2 import MobileNetV2
     from keras.applications.mobilenet_v2 import preprocess_input as preprocess_mobilenet
     modelClass = MobileNetV2
-    preprocess_function = preprocess_mobilenet
-    feat_size = 62720
+    preprocess_function = preprocess_mobilenet 
+
+if(net_name == "resnetv2"):
+    from keras.applications.inception_resnet_v2 import InceptionResNetV2
+    from keras.applications.inception_resnet_v2 import preprocess_input as preprocess_resnetv2
+    modelClass = InceptionResNetV2
+    preprocess_function = preprocess_resnetv2 
+
+if(net_name == "nas"):
+    from keras.applications.nasnet import NASNetLarge
+    from keras.applications.nasnet import preprocess_input as preprocess_nas
+    modelClass = NASNetLarge
+    preprocess_function = preprocess_nas
+
+feat_size = features_sizes[net_name]
+
 
 
 print("\n\n")
@@ -99,7 +112,7 @@ for game_dir in os.listdir(dataset_path):
             
             #extract features
             features =  model.predict(img_data).flatten() 
-
+            print(features.shape)
             #add row to the features matrix 
             all_features = np.append(all_features, np.asmatrix(features), axis=0)
             

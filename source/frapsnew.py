@@ -2,7 +2,7 @@ import os
 import time
 import pyscreenshot as ImageGrab 
 from datetime import datetime
-gameName = "dota"
+gameName = "hots"
 dirname = "../" + gameName + "/"
 if(not os.path.exists(dirname)):
     os.mkdir(dirname)
