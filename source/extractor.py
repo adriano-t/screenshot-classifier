@@ -71,19 +71,6 @@ if(net_name == "dense"):
     modelClass = DenseNet201
     preprocess_function = preprocess_dense
 
-'''if(net_name == "resnet"):
-    keras.applications.resnet_v2.ResNet152V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
-    from keras.applications.resnet_v2 import ResNet152V2
-    from keras.applications.resnet_v2 import preprocess_input as preprocess_resnet
-    modelClass = ResNet152V2
-    preprocess_function = preprocess_resnet'''
-
-if(net_name == "resnext"):
-    from keras.applications.resnext import ResNeXt101
-    from keras.applications.resnext import preprocess_input as preprocess_resnext
-    modelClass = NASNetLarge
-    preprocess_function = preprocess_resnext
-    
 if(net_name == "vgg19"):
     from keras.applications.vgg19 import VGG19
     from keras.applications.vgg19 import preprocess_input as preprocess_vgg19
@@ -138,7 +125,7 @@ for game_dir in os.listdir(dataset_path):
             
             #extract features
             features =  model.predict(img_data).flatten() 
-            print(features.shape)
+            #print(features.shape)
             #add row to the features matrix 
             all_features = np.append(all_features, np.asmatrix(features), axis=0)
             

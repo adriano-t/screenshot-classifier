@@ -3,7 +3,7 @@ import subprocess
 print("===========================")
 print("== Screenshot classifier")
 print("===========================")
-nets = ["vgg16", "inception", "mobilenet","resnetv2", "nas","dense","resnet","vgg19","resnext" ]
+nets = ["vgg16", "inception", "mobilenet","resnetv2", "nas","dense","vgg19",]
 
 ############ NET ###############
 chosen = 0
@@ -26,7 +26,7 @@ net_name=nets[chosen-1]
 print("--- Using " + net_name + " ---")
 
 ############ CROP ###############
-crops = ["full", "bottom-right", "top-left" ]
+crops = ["full", "top-left", "top-right", "bottom-left", "bottom-right"]
 chosen = 0
 i = 1
 choices = "\n"

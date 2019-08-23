@@ -82,18 +82,6 @@ if(net_name == "dense"):
     from keras.applications.densenet import preprocess_input as preprocess_dense
     modelClass = DenseNet201
     preprocess_function = preprocess_dense
-
-if(net_name == "resnet"):
-    from keras.applications.resnet_v2 import ResNet152V2
-    from keras.applications.resnet_v2 import preprocess_input as preprocess_resnet
-    modelClass = ResNet152V2
-    preprocess_function = preprocess_resnet
-
-if(net_name == "resnext"):
-    from keras.applications.resnext import ResNeXt101
-    from keras.applications.resnext import preprocess_input as preprocess_resnext
-    modelClass = NASNetLarge
-    preprocess_function = preprocess_resnext
     
 if(net_name == "vgg19"):
     from keras.applications.vgg19 import VGG19
@@ -105,7 +93,7 @@ feat_size = features_sizes[net_name]
 input_size = input_sizes[net_name]
 
 with open('../models/labels_' + net_name + '.txt') as f:
-    labels_names = [os.path.splitext(line.strip()) for line in f]
+    labels_names = [os.path.splitext(line.strip())[0] for line in f]
 
 
 print("Extracting features Using "+net_name+" net")
@@ -176,7 +164,7 @@ ax.set(xticks=np.arange(cm.shape[1]),
         yticks=np.arange(cm.shape[0]),
         # ... and label them with the respective list entries
         xticklabels=labels_names, yticklabels=labels_names,
-        title= 'Confusion matrix ' + net_name + " " + crop_mode,
+        title= 'Confusion matrix ' + net_name + " (" + crop_mode + ")",
         ylabel='Ground truth',
         xlabel='Predicted')
 
