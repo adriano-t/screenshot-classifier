@@ -1,0 +1,14 @@
+mobilenet bottom-right
+FAILED:
+
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-21-49.bmp | predicted: farcry.np
+R5Apex 2019-06-01 08-45-29-44.bmp | predicted: farcry.np
+R5Apex 2019-06-01 08-45-39-42.bmp | predicted: farcry.np
+R5Apex 2019-06-01 08-45-49-44.bmp | predicted: farcry.np
+R5Apex 2019-06-01 08-45-59-44.bmp | predicted: farcry.np
+Borderlands-3-create-ora-vostra-build-con-skill-tree-interattivo-gamesoul.jpg | predicted: farcry.np
+borderlands-2-game-of-the-year-edition-wallpaper-3.jpg | predicted: farcry.np
+
+----------------------
+
+Ratio: 95.73170731707317%

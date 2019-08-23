@@ -65,7 +65,33 @@ if(net_name == "nas"):
     modelClass = NASNetLarge
     preprocess_function = preprocess_nas
 
+if(net_name == "dense"):
+    from keras.applications.densenet import DenseNet201
+    from keras.applications.densenet import preprocess_input as preprocess_dense
+    modelClass = DenseNet201
+    preprocess_function = preprocess_dense
+
+'''if(net_name == "resnet"):
+    keras.applications.resnet_v2.ResNet152V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+    from keras.applications.resnet_v2 import ResNet152V2
+    from keras.applications.resnet_v2 import preprocess_input as preprocess_resnet
+    modelClass = ResNet152V2
+    preprocess_function = preprocess_resnet'''
+
+if(net_name == "resnext"):
+    from keras.applications.resnext import ResNeXt101
+    from keras.applications.resnext import preprocess_input as preprocess_resnext
+    modelClass = NASNetLarge
+    preprocess_function = preprocess_resnext
+    
+if(net_name == "vgg19"):
+    from keras.applications.vgg19 import VGG19
+    from keras.applications.vgg19 import preprocess_input as preprocess_vgg19
+    modelClass = VGG19
+    preprocess_function = preprocess_vgg19
+
 feat_size = features_sizes[net_name]
+input_size = input_sizes[net_name]
 
 
 
@@ -105,7 +131,7 @@ for game_dir in os.listdir(dataset_path):
             if(crop_mode != "full"): 
                 img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
            
-            img = img.resize((224, 224))
+            img = img.resize(input_size)
             img_data = image.img_to_array(img)
             img_data = np.expand_dims(img_data, axis=0)
             img_data = preprocess_function(img_data)

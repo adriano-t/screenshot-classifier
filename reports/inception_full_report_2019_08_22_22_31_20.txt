@@ -1,0 +1,14 @@
+inception full
+FAILED:
+
+Overwatch 2019-06-01 09-40-01-69.bmp | predicted: apex.np
+ZoneUE4-Win64-Shipping 2019-05-23 18-39-11-50.bmp | predicted: farcry.np
+League of Legends 2019-05-23 16-58-58-16.bmp | predicted: overwatch.np
+R5Apex 2019-06-01 08-45-29-44.bmp | predicted: farcry.np
+Borderlands2 2019-06-09 14-49-31-42.bmp | predicted: apex.np
+Borderlands-3-create-ora-vostra-build-con-skill-tree-interattivo-gamesoul.jpg | predicted: farcry.np
+borderlands-2-game-of-the-year-edition-wallpaper-3.jpg | predicted: lol.np
+
+----------------------
+
+Ratio: 95.73170731707317%

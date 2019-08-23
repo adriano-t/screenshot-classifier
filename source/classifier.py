@@ -13,7 +13,6 @@ from sklearn.metrics import confusion_matrix
 
 start = time.time()
 
-
 net_name = sys.argv[1]
 crop_mode = sys.argv[2]
  
@@ -76,11 +75,37 @@ if(net_name == "nas"):
     from keras.applications.nasnet import preprocess_input as preprocess_nas
     modelClass = NASNetLarge
     preprocess_function = preprocess_nas
+    
+
+if(net_name == "dense"):
+    from keras.applications.densenet import DenseNet201
+    from keras.applications.densenet import preprocess_input as preprocess_dense
+    modelClass = DenseNet201
+    preprocess_function = preprocess_dense
+
+if(net_name == "resnet"):
+    from keras.applications.resnet_v2 import ResNet152V2
+    from keras.applications.resnet_v2 import preprocess_input as preprocess_resnet
+    modelClass = ResNet152V2
+    preprocess_function = preprocess_resnet
+
+if(net_name == "resnext"):
+    from keras.applications.resnext import ResNeXt101
+    from keras.applications.resnext import preprocess_input as preprocess_resnext
+    modelClass = NASNetLarge
+    preprocess_function = preprocess_resnext
+    
+if(net_name == "vgg19"):
+    from keras.applications.vgg19 import VGG19
+    from keras.applications.vgg19 import preprocess_input as preprocess_vgg19
+    modelClass = VGG19
+    preprocess_function = preprocess_vgg19
 
 feat_size = features_sizes[net_name]
+input_size = input_sizes[net_name]
 
 with open('../models/labels_' + net_name + '.txt') as f:
-    labels_names = [line.strip() for line in f]
+    labels_names = [os.path.splitext(line.strip()) for line in f]
 
 
 print("Extracting features Using "+net_name+" net")
@@ -97,7 +122,7 @@ for dirname in os.listdir(test_path):
     for fname in os.listdir(test_path + dirname):
 
         #skip unused directories
-        if not (dirname + ".np") in labels_names:
+        if not (dirname) in labels_names:
             continue
 
         #load target image
@@ -107,14 +132,14 @@ for dirname in os.listdir(test_path):
         if(crop_mode != "full"): 
                 img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
            
-        img = img.resize((224, 224))
+        img = img.resize(input_size)
         img_data = image.img_to_array(img)
         img_data = np.expand_dims(img_data, axis=0)
         img_data = preprocess_function(img_data)
         
         features = extractor_model.predict(img_data).flatten() 
 
-        label_truth = labels_names.index(dirname + ".np")
+        label_truth = labels_names.index(dirname)
         label_predicted = model.predict(np.asmatrix(features)) 
         
         #print("probability: " + str(model.predict_proba(np.asmatrix(features)))) 
@@ -140,7 +165,7 @@ np.set_printoptions(precision=2)
 
 cm = confusion_matrix(y_true, y_pred)
 #classes = classes[unique_labels(y_true, y_pred)] # Only use the labels that appear in the data 
-print('Confusion matrix, without normalization')
+print('Confusion ,matrix')
 print(cm)
 
 fig, ax = plt.subplots()
@@ -151,9 +176,9 @@ ax.set(xticks=np.arange(cm.shape[1]),
         yticks=np.arange(cm.shape[0]),
         # ... and label them with the respective list entries
         xticklabels=labels_names, yticklabels=labels_names,
-        title= 'Confusion matrix ' + net_name,
-        ylabel='True label',
-        xlabel='Predicted label')
+        title= 'Confusion matrix ' + net_name + " " + crop_mode,
+        ylabel='Ground truth',
+        xlabel='Predicted')
 
 
 # Rotate the tick labels and set their alignment.

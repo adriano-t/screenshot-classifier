@@ -1,0 +1,64 @@
+vgg16 bottom-right
+FAILED:
+
+FarCryNewDawn 2019-07-03 17-38-06-45.bmp | predicted: borderlands2.np
+FarCryNewDawn 2019-07-03 17-38-56-44.bmp | predicted: lol.np
+FarCryNewDawn 2019-07-03 17-37-56-45.bmp | predicted: lol.np
+Overwatch 2019-06-06 11-08-22-51.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-39-11-70.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-38-31-70.bmp | predicted: lol.np
+Overwatch 2019-06-06 11-09-32-51.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-39-01-70.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-39-31-69.bmp | predicted: lol.np
+Overwatch 2019-06-06 11-09-42-50.bmp | predicted: lol.np
+Overwatch 2019-06-06 11-09-22-50.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-39-41-70.bmp | predicted: lol.np
+Overwatch 2019-06-06 11-08-32-51.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-39-21-69.bmp | predicted: lol.np
+Overwatch 2019-06-06 11-08-42-50.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-38-51-70.bmp | predicted: lol.np
+Overwatch 2019-06-06 11-08-52-50.bmp | predicted: lol.np
+Overwatch 2019-06-01 09-40-01-69.bmp | predicted: lol.np
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-41-50.bmp | predicted: lol.np
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-21-49.bmp | predicted: lol.np
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-31-49.bmp | predicted: lol.np
+ZoneUE4-Win64-Shipping 2019-05-23 18-39-51-51.bmp | predicted: borderlands2.np
+R5Apex 2019-06-01 08-45-29-44.bmp | predicted: lol.np
+R5Apex 2019-06-01 08-45-39-42.bmp | predicted: farcry.np
+R5Apex 2019-06-01 08-45-49-44.bmp | predicted: farcry.np
+R5Apex 2019-06-01 08-45-59-44.bmp | predicted: borderlands2.np
+OxygenNotIncluded 2019-08-19 13-40-26-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 13-44-06-66.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-45-26-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-45-56-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 13-57-46-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-46-06-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-20-36-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 13-43-56-68.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-20-06-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 13-43-46-68.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 13-40-16-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-45-36-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 13-40-36-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-20-26-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-19-46-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 14-19-56-67.bmp | predicted: lol.np
+OxygenNotIncluded 2019-08-19 13-49-26-66.bmp | predicted: lol.np
+Borderlands2 2019-06-09 14-49-31-42.bmp | predicted: lol.np
+Borderlands2 2019-06-09 14-49-21-42.bmp | predicted: lol.np
+Borderlands-3-create-ora-vostra-build-con-skill-tree-interattivo-gamesoul.jpg | predicted: lol.np
+Borderlands2 2019-06-09 14-46-21-46.bmp | predicted: lol.np
+Borderlands2 2019-06-09 14-48-51-42.bmp | predicted: lol.np
+Borderlands2 2019-06-09 14-47-58-37.bmp | predicted: lol.np
+borderlands-2-game-of-the-year-edition-wallpaper-3.jpg | predicted: lol.np
+Borderlands2 2019-06-09 14-49-11-42.bmp | predicted: lol.np
+dota_13_18_48_8.png | predicted: lol.np
+dota_12_46_21_2.png | predicted: lol.np
+dota_12_47_12_9.png | predicted: lol.np
+dota_12_46_08_5.png | predicted: lol.np
+dota_12_46_34_0.png | predicted: lol.np
+dota_12_47_00_2.png | predicted: lol.np
+
+----------------------
+
+Ratio: 65.2439024390244%
