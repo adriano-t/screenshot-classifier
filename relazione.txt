@@ -1,0 +1,43 @@
+-------OBBIETTIVO
+
+Cercare di riconoscere un videogioco tramite uno screenshot
+
+-------PROCEDIMENTO
+
+--Preparazione
+
+Abbiamo creato un dataset (dset) suddiviso in varie cartelle in cui ognuna
+contiene screenshot di un videogioco spegifico(almeno 100 immagini per gioco,
+10 giochi)
+
+--Esecuzione (abbiamo usato python come linguaggio)
+
+Il file main.py sceglie il tipo di rete neurale che si vuole utilizzare (7
+disponibili) e il tipo di ritaglio (tutto lo screen o uno dei 4 angoli).
+Questo script fa partire altri 3 script(si eseguono in ordine sequenziale): 
+extractor, train e classifier.
+
+Extractor: utilizzando la rete neurale scelta estrae le features delle immagini e le salva in un file ".np"
+
+Train: carica tutti i file appena creati creando le labels che saranno usate per
+l'addestramento. Utilizzando una support vector machine creiamo il modello 
+addestrato per poter classificare l'immagine.
+
+Classifier: carica i modelli creati e prova a preddire a quale gioco appartiene lo
+screen che viene selezionato. Gli screen per il test sono anch'essi suddivisi in
+cartelle e la correttezza del test è data dal nome della cartella a cui
+appartengono. Per ogni rete e tipo di crop (ritaglio dell'immagine) viene stampato
+una matrice di confusione e un file di testo contenente gli screen mancati e la
+probabilità di successo
+
+-------NOTE
+
+Nasnet troppo onerosa di tempo
+Abbiamo aggiunto delle immagini difficili di borderland 2 e 3(non salvato nel db)
+per poter valutare l'efficenza.
+
+-------CONCLUSIONI
+
+Le reti tendono a funzionare meglio senza crop :alcune reti riescono a 
+prevedere correttamente tutto tranne le immagini"difficili".
+
