@@ -5,8 +5,6 @@ import time
 from netinfo import *
 import numpy as np
 from keras.preprocessing import image
-import tensorflow.python.util.deprecation as deprecation
-deprecation._PRINT_DEPRECATION_WARNINGS = False
  
 net_name = sys.argv[1]
 crop_mode = sys.argv[2]
