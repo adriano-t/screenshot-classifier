@@ -5,9 +5,13 @@ import time
 from netinfo import *
 import numpy as np
 from keras.preprocessing import image
- 
+
+#import tensorflow.python.util.deprecation as deprecation
+#deprecation._PRINT_DEPRECATION_WARNINGS = False
+
 net_name = sys.argv[1]
 crop_mode = sys.argv[2]
+number_train = int(sys.argv[3])
 
 if(crop_mode != "full"):
     crop_modes = { 
@@ -89,10 +93,13 @@ features_dir = features_path + net_name + "/"
 if(not os.path.exists(features_dir)):
     os.mkdir(features_dir)
 
+features_dir_crop = features_dir + crop_mode + "/"
+if(not os.path.exists(features_dir_crop)):
+    os.mkdir(features_dir_crop)
 #for takes all images on directories
 for game_dir in os.listdir(dataset_path):
 
-    out_path =  features_dir  + game_dir  + ".np"
+    out_path =  features_dir_crop  + game_dir + ".np"
 
     if(os.path.exists(out_path)):
         print(game_dir + ": game features already extracted")
@@ -128,7 +135,7 @@ for game_dir in os.listdir(dataset_path):
             all_features = np.append(all_features, np.asmatrix(features), axis=0)
             
             i += 1
-            if(i > 100):
+            if(i > number_train-1):
                 break
         except Exception as e:
             print(e)
@@ -144,6 +151,6 @@ print("Execution time:" + str(time.time() - start))
 
 '''
 # Per un elenco delle possibili reti, si veda
-# la tabella "Documentation for individual models" su
+# tabella "Documentation for individual models" su
 # https://keras.io/applications/
 # '''

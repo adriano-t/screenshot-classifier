@@ -1,0 +1,71 @@
+dense bottom-right
+FAILED:
+
+fifa19_09_21_15_8.png | predicted: pes20
+fifa19_09_31_16_0.png | predicted: farcry
+fifa19_09_28_16_1.png | predicted: fifa20
+fifa19_09_27_05_2.png | predicted: pes20
+pes20_18_12_14_9.png | predicted: fifa20
+pes20_13_58_41_9.png | predicted: pes19
+pes20_13_57_05_1.png | predicted: pes19
+pes20_20_53_45_5.png | predicted: fifa20
+pes20_20_52_48_3.png | predicted: fifa20
+pes20_18_19_45_9.png | predicted: fifa20
+pes20_17_59_43_1.png | predicted: fifa19
+pes20_17_59_31_4.png | predicted: fifa19
+pes20_18_17_57_5.png | predicted: fifa20
+pes20_18_19_57_7.png | predicted: fifa19
+pes20_18_00_18_1.png | predicted: fifa19
+pes20_20_52_59_7.png | predicted: fifa20
+pes20_18_06_42_3.png | predicted: farcry
+Overwatch 2019-06-01 09-38-41-70.bmp | predicted: farcry
+pes19_11_13_50_8.png | predicted: farcry
+pes19_11_17_25_0.png | predicted: fifa20
+pes19_11_13_38_4.png | predicted: pes20
+pes19_11_44_57_2.png | predicted: fifa20
+pes19_11_45_10_0.png | predicted: pes20
+pes19_11_45_58_4.png | predicted: fifa19
+pes19_11_24_45_9.png | predicted: fifa20
+pes19_11_23_55_6.png | predicted: fifa19
+pes19_11_18_28_1.png | predicted: pes20
+pes19_11_24_58_0.png | predicted: pes20
+pes19_11_04_56_3.png | predicted: pes20
+pes19_11_08_39_2.png | predicted: fifa20
+pes19_11_05_09_0.png | predicted: pes20
+fifa20_20_55_09_0.png | predicted: pes20
+fifa20_20_40_25_3.png | predicted: pes20
+R5Apex 2019-06-01 08-44-09-43.bmp | predicted: farcry
+apexnew_12_21_04_3.png | predicted: farcry
+apexnew_12_19_00_1.png | predicted: farcry
+R5Apex 2019-06-01 08-44-29-44.bmp | predicted: farcry
+R5Apex 2019-06-01 08-44-19-44.bmp | predicted: farcry
+apexnew_12_20_13_6.png | predicted: farcry
+R5Apex 2019-06-01 08-45-29-44.bmp | predicted: pes20
+apexnew_12_20_00_9.png | predicted: farcry
+R5Apex 2019-06-01 08-45-39-42.bmp | predicted: farcry
+apexnew_12_21_16_7.png | predicted: pes20
+apexnew_12_20_26_5.png | predicted: farcry
+apexnew_12_19_48_4.png | predicted: farcry
+R5Apex 2019-06-01 08-45-49-44.bmp | predicted: farcry
+R5Apex 2019-06-01 08-43-49-44.bmp | predicted: farcry
+R5Apex 2019-06-01 08-43-59-43.bmp | predicted: farcry
+apexnew_12_19_23_4.png | predicted: farcry
+apexnew_12_21_29_1.png | predicted: overwatch
+R5Apex 2019-06-01 08-44-39-43.bmp | predicted: farcry
+apexnew_12_19_11_7.png | predicted: farcry
+apexnew_12_19_35_7.png | predicted: farcry
+apexnew_12_21_54_1.png | predicted: farcry
+apexnew_12_20_39_4.png | predicted: farcry
+R5Apex 2019-06-01 08-45-59-44.bmp | predicted: farcry
+OxygenNotIncluded 2019-08-19 13-58-06-68.bmp | predicted: fifa20
+OxygenNotIncluded 2019-08-19 13-44-06-66.bmp | predicted: farcry
+OxygenNotIncluded 2019-08-19 13-43-56-68.bmp | predicted: farcry
+OxygenNotIncluded 2019-08-19 13-43-46-68.bmp | predicted: farcry
+OxygenNotIncluded 2019-08-19 13-49-26-66.bmp | predicted: farcry
+OxygenNotIncluded 2019-08-19 13-57-56-67.bmp | predicted: fifa20
+Borderlands-3-create-ora-vostra-build-con-skill-tree-interattivo-gamesoul.jpg | predicted: farcry
+borderlands-2-game-of-the-year-edition-wallpaper-3.jpg | predicted: farcry
+
+----------------------
+
+Ratio: 73.44398340248964%

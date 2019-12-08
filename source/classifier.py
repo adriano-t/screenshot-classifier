@@ -15,26 +15,17 @@ start = time.time()
 
 net_name = sys.argv[1]
 crop_mode = sys.argv[2]
- 
-print(crop_mode)
 
-if(crop_mode != "full"):
-    crop_modes = { 
-        "bottom-right":  (4/5, 2/3, 1, 1), 
-        "top-left":  (0, 0, 1/5, 1/3),
-        "top-right": (0, 2/3, 1/5, 1),
-        "bottom-left": (0, 2/3, 1/5, 1), 
-    }
-
-    mode = crop_modes[crop_mode]
-    crop_x1 = mode[0]
-    crop_y1 = mode[1]
-    crop_x2 = mode[2]
-    crop_y2 = mode[3]
+crop_modes = { 
+    "bottom-right":  (4/5, 2/3, 1, 1), 
+    "top-left":  (0, 0, 1/5, 1/3),
+    "top-right": (0, 2/3, 1/5, 1),
+    "bottom-left": (0, 2/3, 1/5, 1), 
+}
 
 
 # Check if the model is trained
-if not os.path.exists('../models/labels_' + net_name + '.txt') or not os.path.exists('../models/'+net_name+'.model'):
+if not os.path.exists('../models/labels_' + net_name + '.txt') or not os.path.exists('../models/'+net_name+ "_" + crop_mode+'.model'):
     print("Error: there is no trained model for " + net_name)
 
 # Create report file
@@ -92,20 +83,29 @@ if(net_name == "vgg19"):
 feat_size = features_sizes[net_name]
 input_size = input_sizes[net_name]
 
-with open('../models/labels_' + net_name + '.txt') as f:
-    labels_names = [os.path.splitext(line.strip())[0] for line in f]
-
-
-print("Extracting features Using "+net_name+" net")
-extractor_model = modelClass(weights='imagenet', include_top=False)
-print(labels_names)
 test_path = "../test/"
 correct = 0
 count = 0
 y_true = []
-y_pred = []
-print("Loading model " + net_name)
-model = joblib.load('../models/'+net_name+'.model')
+y_pred = []    
+
+with open('../models/labels_' + net_name+ '.txt') as f:
+    labels_names = [os.path.splitext(line.strip().split('$')[0])[0] for line in f]
+print(labels_names)
+
+print("Extracting features Using "+net_name +" net")
+extractor_model = modelClass(weights='imagenet', include_top=False)
+
+if crop_mode=='all':
+    model_all_svm={}
+    for name in ["full", "top-left", "top-right", "bottom-left", "bottom-right"]:
+        print("Loading model " + net_name)
+        model_all_svm[name] = joblib.load('../models/'+net_name+ '_' + name +'.model')
+
+else:
+    print("Loading model " + net_name)
+    model = joblib.load('../models/'+net_name+ '_' + crop_mode +'.model')
+
 for dirname in os.listdir(test_path):
     for fname in os.listdir(test_path + dirname):
 
@@ -115,32 +115,90 @@ for dirname in os.listdir(test_path):
 
         #load target image
         img_path = test_path + dirname + "/" + fname 
-        #img_path = "/home/empo/Scrivania/progettottr/dset/overwatch/Overwatch 2019-06-01 09-33-21-84.bmp"
         img = image.load_img(img_path)
-        if(crop_mode != "full"): 
-                img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
-           
-        img = img.resize(input_size)
-        img_data = image.img_to_array(img)
-        img_data = np.expand_dims(img_data, axis=0)
-        img_data = preprocess_function(img_data)
-        
-        features = extractor_model.predict(img_data).flatten() 
 
-        label_truth = labels_names.index(dirname)
-        label_predicted = model.predict(np.asmatrix(features)) 
-        
-        #print("probability: " + str(model.predict_proba(np.asmatrix(features)))) 
-         
-        y_true.append(label_truth) 
-        y_pred.append(label_predicted)
-        if(label_predicted == label_truth):
-            correct += 1
-            print("[v] " + fname + " | predicted: " + str(labels_names[int(label_predicted)])) 
-        else :
-            print("[ ] " + fname + " | predicted: " + str(labels_names[int(label_predicted)]))
-            freport.write(fname + " | predicted: " + str(labels_names[int(label_predicted)]) + "\n")
-        count += 1
+        if crop_mode=="all":
+            #labels found for all crop
+            labels_found=[0]*len(labels_names)
+            max_p=0
+            label_max=0
+            label_truth = labels_names.index(dirname)
+            y_true.append(label_truth) 
+            for name in ["full", "top-left", "top-right", "bottom-left", "bottom-right"]:
+
+                if(name != "full"): 
+                    mode = crop_modes[name]
+                    crop_x1 = mode[0]
+                    crop_y1 = mode[1]
+                    crop_x2 = mode[2]
+                    crop_y2 = mode[3]    
+                    img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
+                
+                img = img.resize(input_size)
+                img_data = image.img_to_array(img)
+                img_data = np.expand_dims(img_data, axis=0)
+                img_data = preprocess_function(img_data)
+                
+                features = extractor_model.predict(img_data).flatten() 
+ 
+                label_predicted = model_all_svm[name].predict(np.asmatrix(features)) 
+                probability=model_all_svm[name].predict_proba(np.asmatrix(features)) 
+                #if probability>0.9:
+                labels_found[int(label_predicted)]+=np.amax(probability)
+                #next print: for each model print probability maxfound for crop
+                #print( fname + " | predicted: " + str(labels_names[int(label_predicted)])+"probab: "+str(np.amax(probability)))
+
+                #if max_p < probability: commentato max probability
+                #    max_p= probability
+                #    label_max =int(label_predicted)
+
+            label_predicted=np.argmax(labels_found)
+
+            print(labels_names)
+            print('probab found:'+str(labels_found))
+            
+            #label_predicted=label_max commento prob
+            y_pred.append(label_predicted)
+            if(label_predicted == label_truth):
+                correct += 1
+                print("[v] " + fname + " | predicted: " + str(labels_names[int(label_predicted)])) 
+            else :
+                print("[ ] " + fname + " | predicted: " + str(labels_names[int(label_predicted)]))
+                freport.write(fname + " | predicted: " + str(labels_names[int(label_predicted)]) + "\n")
+            count += 1
+            print('\n\n')
+
+        else:
+       
+            if(crop_mode != "full"): 
+                mode = crop_modes[crop_mode]
+                crop_x1 = mode[0]
+                crop_y1 = mode[1]
+                crop_x2 = mode[2]
+                crop_y2 = mode[3]
+                img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
+               
+            img = img.resize(input_size)
+            img_data = image.img_to_array(img)
+            img_data = np.expand_dims(img_data, axis=0)
+            img_data = preprocess_function(img_data)
+            
+            features = extractor_model.predict(img_data).flatten() 
+
+            label_truth = labels_names.index(dirname)
+            label_predicted = model.predict(np.asmatrix(features)) 
+            
+            #print("probability: " + str(model.predict_proba(np.asmatrix(features)))) 
+            
+            y_true.append(label_truth) 
+            y_pred.append(label_predicted)
+            if(label_predicted == label_truth):
+                correct += 1
+                print("[v] " + fname + " | predicted: " + str(labels_names[int(label_predicted)])) 
+            else :
+                print("[ ] " + fname + " | predicted: " + str(labels_names[int(label_predicted)]))
+                freport.write(fname + " | predicted: " + str(labels_names[int(label_predicted)]) + "\n")
+            count += 1
 
 print("ratio: " + str((correct / count) * 100) + "%")
 freport.write("\n----------------------\n\nRatio: " + str((correct / count) * 100) + "%")

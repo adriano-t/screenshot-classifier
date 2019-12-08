@@ -1,0 +1,25 @@
+mobilenet full
+FAILED:
+
+FarCryNewDawn 2019-07-03 17-39-26-45.bmp | predicted: deathstranding
+gta5_04_12_46_1.png | predicted: deathstranding
+pes20_18_19_45_9.png | predicted: fifa19
+pes20_17_59_31_4.png | predicted: fifa19
+pes20_18_18_09_3.png | predicted: deathstranding
+pes20_13_55_39_2.png | predicted: fifa19
+pes20_18_06_42_3.png | predicted: deathstranding
+ZoneUE4-Win64-Shipping 2019-05-23 18-39-11-50.bmp | predicted: farcry
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-21-49.bmp | predicted: farcry
+pes19_11_13_50_8.png | predicted: farcry
+pes19_11_24_45_9.png | predicted: fifa19
+pes19_11_24_58_0.png | predicted: pes20
+pes19_11_08_39_2.png | predicted: fifa19
+deathstranding_04_59_24_9.png | predicted: gta5
+deathstranding_04_42_38_4.png | predicted: overwatch
+fifa20_20_40_25_3.png | predicted: fifa19
+fifa20_21_01_20_4.png | predicted: pes20
+Borderlands-3-create-ora-vostra-build-con-skill-tree-interattivo-gamesoul.jpg | predicted: farcry
+
+----------------------
+
+Ratio: 93.87755102040816%
