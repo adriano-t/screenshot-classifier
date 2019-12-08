@@ -5,3 +5,7 @@ test
 *.png
 models
 features
+heatmap
+heatmap_results
+reports
+__pycache__
