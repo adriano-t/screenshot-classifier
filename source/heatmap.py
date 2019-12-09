@@ -104,11 +104,36 @@ print("Loading model " + net_name)
 print('../models/'+net_name+ '_' + crop_mode +'.model')
 
 model = joblib.load('../models/'+net_name+ '_' + crop_mode +'.model')
+
+
 for dirname in os.listdir(test_path):
+
+    #create empty global heatmap for the current game
+    count = 0
+    heat_mean =  np.zeros(input_size)
+
+    #create directory if does not exists
+    if not os.path.exists(out_path + dirname):
+        os.mkdir(out_path + dirname)
+
+    # loop through each image
     for fname in os.listdir(test_path + dirname):
  
         #skip unused directories
         if not (dirname) in labels_names:
+            continue
+
+        out_name = os.path.splitext(fname)[0] + ".jpg"
+        out_name_heatmap = os.path.splitext(fname)[0] + ".npy"
+
+        plot_path = out_path + dirname + "/"+ out_name
+        heat_path = out_path + dirname + "/"+ out_name_heatmap
+
+        #skip if already exists
+        if os.path.exists(plot_path) and os.path.exists(heat_path):
+            heat = np.load(heat_path)
+            heat_mean += heat
+            count += 1
             continue
 
         print("Generating heatmap for " + dirname + "/" + fname )
@@ -144,23 +169,30 @@ for dirname in os.listdir(test_path):
         #calculate mean color
         I = np.array(img) 
         mean_color = np.mean(I, axis=(0, 1))
-        print(mean_color)
+        #print(mean_color)
 
         #create sliding box
         box_scale = (5, 5)
         step = 10
-        box_size = (math.floor(img.size[0]/box_scale[0]), math.floor(img.size[1]/box_scale[1]), 3)
+        box_size = (math.floor(img.size[0] / box_scale[0] / 2), math.floor(img.size[1] / box_scale[1] / 2))
         #print(box_size) 
         #print(mask)
         
         heat = np.zeros(img.size)
         # slide the mask
-        for x in range(0, img.size[0] - 1, step): 
-            for y in range(0, img.size[1] - 1, step):                
+        for x in range(0, img.size[0], step): 
+            for y in range(0, img.size[1], step):                
                 I = np.array(img)
 				
-				# draw box with mean color (checking to be inside the image)
-                I[x : min(img.size[0], x + box_size[0]), y : min(img.size[1], y + box_size[1]), :] = mean_color
+                # calculate box coordinates
+                xmin = max(x - box_size[0], 0)
+                xmax = min(x + box_size[0], img.size[0])
+                
+                ymin = max(y - box_size[1], 0)
+                ymax = min(y + box_size[1], img.size[1])
+
+				# draw box with mean color
+                I[xmin:xmax, ymin:ymax, :] = mean_color
         
                 # convert back to img
                 #img = image.array_to_img(I) #maybe np.uint8(I) 
@@ -181,21 +213,31 @@ for dirname in os.listdir(test_path):
                 heat[x:x+step, y:y+step] = delta
                 #print("delta("+str(x) +","+str(y)+") = " + str(delta))
         
-
         #heat *= 255.0 / heat.max() #normalization
-		 
+		
+        heat_mean += heat #add to global heatmap
+        
+        plt.clf()
         plt.figure(1)
-        plt.subplot(211)
+        plt.subplot(2,1,1)
         plt.imshow(img) 
-        plt.subplot(212)
+        plt.subplot(2,1,2)
         plt.imshow(heat, cmap='bwr', interpolation='bilinear', vmin=-0.25, vmax=0.25)
         #plt.show() 
-        if not os.path.exists(out_path + dirname ):
-            os.mkdir(out_path + dirname )
-        
-        out_name = os.path.splitext(fname)[0] + ".jpg"
-        plt.savefig(out_path + dirname + "/"+ out_name, bbox_inches='tight', pad_inches=0)
-        count += 1
+       
+		
+        #save plot result
+        plt.savefig(plot_path, bbox_inches='tight', pad_inches=0)
 
+        #save greyscale heatmap
+        np.save(heat_path, heat) 
+        count += 1
+    
+    #global heatmap (1 per game)
+    heat_mean /= count
+    plt.clf()
+    plt.figure(1)
+    plt.imshow(heat_mean, cmap='bwr', interpolation='bilinear', vmin=-0.25, vmax=0.25)
+    plt.savefig(out_path + dirname + "/_heatmap.jpg", bbox_inches='tight', pad_inches=0)
 
 print("Execution time:" + str(time.time() - start))
