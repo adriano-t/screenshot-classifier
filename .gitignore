@@ -8,4 +8,4 @@ features
 heatmap
 heatmap_results
 reports
-__pycache__
+*.pyc

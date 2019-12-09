@@ -135,7 +135,7 @@ for dirname in os.listdir(test_path):
         prob_array = model.predict_proba(np.asmatrix(features))
         probability_full = prob_array[0][label_truth]
         
-        print("probability: " + str(probability_full)) 
+        print("   probability: " + str(probability_full)) 
         # mean_color = (0,0,0)
         # for i in range(img.size[0]):    # for every col:
         #     for j in range(img.size[1]):    # For every row
@@ -147,7 +147,7 @@ for dirname in os.listdir(test_path):
         print(mean_color)
 
         #create sliding box
-        box_scale = (8, 5)
+        box_scale = (5, 5)
         step = 10
         box_size = (math.floor(img.size[0]/box_scale[0]), math.floor(img.size[1]/box_scale[1]), 3)
         #print(box_size) 
@@ -158,6 +158,8 @@ for dirname in os.listdir(test_path):
         for x in range(0, img.size[0] - 1, step): 
             for y in range(0, img.size[1] - 1, step):                
                 I = np.array(img)
+				
+				# draw box with mean color (checking to be inside the image)
                 I[x : min(img.size[0], x + box_size[0]), y : min(img.size[1], y + box_size[1]), :] = mean_color
         
                 # convert back to img
@@ -175,18 +177,18 @@ for dirname in os.listdir(test_path):
                 probability = prob_array[0][label_truth]
 
                 # calculate probability delta
-                delta = probability - probability_full
+                delta = probability_full - probability
                 heat[x:x+step, y:y+step] = delta
-                print("delta("+str(x) +","+str(y)+") = " + str(delta))
+                #print("delta("+str(x) +","+str(y)+") = " + str(delta))
         
 
-        heat *= 255.0 / heat.max()
-        #plt.imshow(heat, cmap='hot', interpolation='nearest')
+        #heat *= 255.0 / heat.max() #normalization
+		 
         plt.figure(1)
         plt.subplot(211)
         plt.imshow(img) 
-        plt.subplot(212) 
-        plt.imshow(heat, cmap='bwr', interpolation='bilinear')
+        plt.subplot(212)
+        plt.imshow(heat, cmap='bwr', interpolation='bilinear', vmin=-0.25, vmax=0.25)
         #plt.show() 
         if not os.path.exists(out_path + dirname ):
             os.mkdir(out_path + dirname )
@@ -195,7 +197,5 @@ for dirname in os.listdir(test_path):
         plt.savefig(out_path + dirname + "/"+ out_name, bbox_inches='tight', pad_inches=0)
         count += 1
 
-print("ratio: " + str((correct / count) * 100) + "%")
-freport.write("\n----------------------\n\nRatio: " + str((correct / count) * 100) + "%")
 
 print("Execution time:" + str(time.time() - start))
