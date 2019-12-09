@@ -1,0 +1,42 @@
+mobilenet top-right
+FAILED:
+
+fifa19_09_21_15_8.png | predicted: pes19
+fifa19_09_31_16_0.png | predicted: deathstranding
+fifa19_09_28_16_1.png | predicted: fifa20
+rocketleague_05_59_12_7.png | predicted: deathstranding
+rocketleague_05_15_25_4.png | predicted: gta5
+gta5_04_16_35_6.png | predicted: deathstranding
+gta5_04_14_27_1.png | predicted: deathstranding
+gta5_04_35_17_4.png | predicted: deathstranding
+gta5_04_30_33_1.png | predicted: deathstranding
+gta5_04_31_10_1.png | predicted: deathstranding
+pes20_13_57_05_1.png | predicted: pes19
+pes20_18_19_45_9.png | predicted: rocketleague
+pes20_13_55_39_2.png | predicted: fifa19
+pes20_18_06_42_3.png | predicted: gta5
+ZoneUE4-Win64-Shipping 2019-05-23 18-39-01-50.bmp | predicted: farcry
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-11-50.bmp | predicted: farcry
+ZoneUE4-Win64-Shipping 2019-05-23 18-39-11-50.bmp | predicted: farcry
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-51-50.bmp | predicted: farcry
+ZoneUE4-Win64-Shipping 2019-05-23 18-38-21-49.bmp | predicted: farcry
+ZoneUE4-Win64-Shipping 2019-05-23 18-39-51-51.bmp | predicted: farcry
+pes19_11_13_50_8.png | predicted: gta5
+pes19_11_13_38_4.png | predicted: pes20
+pes19_11_45_58_4.png | predicted: gta5
+pes19_11_24_45_9.png | predicted: deathstranding
+pes19_11_04_56_3.png | predicted: fifa19
+pes19_11_08_39_2.png | predicted: farcry
+deathstranding_05_00_12_2.png | predicted: rocketleague
+League of Legends 2019-05-23 16-59-58-16.bmp | predicted: farcry
+League of Legends 2019-05-23 16-58-58-16.bmp | predicted: farcry
+fifa20_20_55_09_0.png | predicted: rocketleague
+fifa20_20_40_25_3.png | predicted: farcry
+fifa20_21_01_20_4.png | predicted: pes19
+OxygenNotIncluded 2019-08-19 13-40-16-67.bmp | predicted: farcry
+Borderlands-3-create-ora-vostra-build-con-skill-tree-interattivo-gamesoul.jpg | predicted: farcry
+borderlands-2-game-of-the-year-edition-wallpaper-3.jpg | predicted: farcry
+
+----------------------
+
+Ratio: 88.09523809523809%

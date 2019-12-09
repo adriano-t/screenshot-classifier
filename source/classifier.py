@@ -99,7 +99,7 @@ extractor_model = modelClass(weights='imagenet', include_top=False)
 if crop_mode=='all':
     model_all_svm={}
     for name in ["full", "top-left", "top-right", "bottom-left", "bottom-right"]:
-        print("Loading model " + net_name)
+        print("Loading model " + net_name+'_' + name)
         model_all_svm[name] = joblib.load('../models/'+net_name+ '_' + name +'.model')
 
 else:
@@ -115,7 +115,7 @@ for dirname in os.listdir(test_path):
 
         #load target image
         img_path = test_path + dirname + "/" + fname 
-        img = image.load_img(img_path)
+        img_or = image.load_img(img_path)
 
         if crop_mode=="all":
             #labels found for all crop
@@ -132,8 +132,12 @@ for dirname in os.listdir(test_path):
                     crop_y1 = mode[1]
                     crop_x2 = mode[2]
                     crop_y2 = mode[3]    
-                    img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
-                
+                    img = img_or.crop((crop_x1 * img_or.width, crop_y1 * img_or.height, crop_x2 * img_or.width, crop_y2 * img_or.height,)) 
+                    #print("crop x1:"+str(crop_x1* img.width)+"  crop x2:"+str(crop_x2* img.width)+"  crop y1:"+str(crop_y1* img.height)+" crop y2:"+str(crop_y2* img.height))
+                else:
+                    img=img_or
+                #img.save("../temp/"+fname+'.png')
+
                 img = img.resize(input_size)
                 img_data = image.img_to_array(img)
                 img_data = np.expand_dims(img_data, axis=0)
@@ -143,21 +147,11 @@ for dirname in os.listdir(test_path):
  
                 label_predicted = model_all_svm[name].predict(np.asmatrix(features)) 
                 probability=model_all_svm[name].predict_proba(np.asmatrix(features)) 
-                #if probability>0.9:
                 labels_found[int(label_predicted)]+=np.amax(probability)
-                #next print: for each model print probability maxfound for crop
-                #print( fname + " | predicted: " + str(labels_names[int(label_predicted)])+"probab: "+str(np.amax(probability)))
-
-                #if max_p < probability: commentato max probability
-                #    max_p= probability
-                #    label_max =int(label_predicted)
+                #labels_found+=probability
 
             label_predicted=np.argmax(labels_found)
 
-            print(labels_names)
-            print('probab found:'+str(labels_found))
-            
-            #label_predicted=label_max commento prob
             y_pred.append(label_predicted)
             if(label_predicted == label_truth):
                 correct += 1
@@ -166,7 +160,6 @@ for dirname in os.listdir(test_path):
                 print("[ ] " + fname + " | predicted: " + str(labels_names[int(label_predicted)]))
                 freport.write(fname + " | predicted: " + str(labels_names[int(label_predicted)]) + "\n")
             count += 1
-            print('\n\n')
 
         else:
        
@@ -176,8 +169,10 @@ for dirname in os.listdir(test_path):
                 crop_y1 = mode[1]
                 crop_x2 = mode[2]
                 crop_y2 = mode[3]
-                img = img.crop((crop_x1 * img.width, crop_y1 * img.height, crop_x2 * img.width, crop_y2 * img.height,)) 
-               
+                img = img_or.crop((crop_x1 * img_or.width, crop_y1 * img_or.height, crop_x2 * img_or.width, crop_y2 * img_or.height,)) 
+            
+            else:
+                img=img_or   
             img = img.resize(input_size)
             img_data = image.img_to_array(img)
             img_data = np.expand_dims(img_data, axis=0)
