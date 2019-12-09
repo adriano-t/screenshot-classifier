@@ -1,0 +1,3 @@
+mobilenet full
+FAILED:
+
