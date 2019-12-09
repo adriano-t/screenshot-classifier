@@ -1,3 +1,0 @@
-dense full
-FAILED:
-
