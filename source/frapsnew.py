@@ -1,8 +1,9 @@
 import os
+import sys
 import time
 import pyscreenshot as ImageGrab 
 from datetime import datetime
-gameName = "deathstranding"
+gameName = sys.argv[1]
 dirname = "../" + gameName + "/"
 
 if __name__ == '__main__':

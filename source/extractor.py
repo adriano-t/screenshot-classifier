@@ -82,8 +82,6 @@ if(net_name == "vgg19"):
 feat_size = features_sizes[net_name]
 input_size = input_sizes[net_name]
 
-
-
 print("\n\n")
 print("===== Using " + net_name + " =====")
 model = modelClass(weights='imagenet', include_top=False) #model.summary() 
