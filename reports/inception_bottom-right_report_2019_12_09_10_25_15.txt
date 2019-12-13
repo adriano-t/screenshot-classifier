@@ -1,3 +1,0 @@
-inception bottom-right
-FAILED:
-

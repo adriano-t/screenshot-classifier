@@ -15,6 +15,7 @@ start = time.time()
 
 net_name = sys.argv[1]
 crop_mode = sys.argv[2]
+number_train = sys.argv[3]
 
 crop_modes = { 
     "bottom-right":  (4/5, 2/3, 1, 1), 
@@ -23,7 +24,6 @@ crop_modes = {
     "bottom-left": (0, 2/3, 1/5, 1), 
 }
 
-
 # Check if the model is trained
 if not os.path.exists('../models/labels_' + net_name + '.txt') or not os.path.exists('../models/'+net_name+ "_" + crop_mode+'.model'):
     print("Error: there is no trained model for " + net_name)
@@ -31,8 +31,8 @@ if not os.path.exists('../models/labels_' + net_name + '.txt') or not os.path.ex
 # Create report file
 if not os.path.exists("../reports/"):
     os.mkdir("../reports/")
-    #%m/%d/%Y, %H:%M:%S
-freport_name = "../reports/" + net_name + "_" + crop_mode + "_report_{}".format(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))
+
+freport_name = "../reports/" + net_name + "_" + crop_mode + number_train+"_report_{}".format(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))
 freport = open(freport_name + ".txt", "w+")
 freport.write(net_name + " " + crop_mode + "\n")
 freport.write("FAILED:\n\n")
@@ -133,10 +133,8 @@ for dirname in os.listdir(test_path):
                     crop_x2 = mode[2]
                     crop_y2 = mode[3]    
                     img = img_or.crop((crop_x1 * img_or.width, crop_y1 * img_or.height, crop_x2 * img_or.width, crop_y2 * img_or.height,)) 
-                    #print("crop x1:"+str(crop_x1* img.width)+"  crop x2:"+str(crop_x2* img.width)+"  crop y1:"+str(crop_y1* img.height)+" crop y2:"+str(crop_y2* img.height))
                 else:
                     img=img_or
-                #img.save("../temp/"+fname+'.png')
 
                 img = img.resize(input_size)
                 img_data = image.img_to_array(img)
@@ -147,12 +145,14 @@ for dirname in os.listdir(test_path):
  
                 label_predicted = model_all_svm[name].predict(np.asmatrix(features)) 
                 probability=model_all_svm[name].predict_proba(np.asmatrix(features)) 
+                #for all labels we sum the probability of the img selected belongs to that game
                 labels_found[int(label_predicted)]+=np.amax(probability)
-                #labels_found+=probability
 
+            #select max element of the array (the one supposed to be right)
             label_predicted=np.argmax(labels_found)
 
             y_pred.append(label_predicted)
+            #print of all tests and save failures
             if(label_predicted == label_truth):
                 correct += 1
                 print("[v] " + fname + " | predicted: " + str(labels_names[int(label_predicted)])) 
@@ -182,9 +182,7 @@ for dirname in os.listdir(test_path):
 
             label_truth = labels_names.index(dirname)
             label_predicted = model.predict(np.asmatrix(features)) 
-            
-            #print("probability: " + str(model.predict_proba(np.asmatrix(features)))) 
-            
+
             y_true.append(label_truth) 
             y_pred.append(label_predicted)
             if(label_predicted == label_truth):
@@ -217,7 +215,7 @@ ax.set(xticks=np.arange(cm.shape[1]),
         yticks=np.arange(cm.shape[0]),
         # ... and label them with the respective list entries
         xticklabels=labels_names, yticklabels=labels_names,
-        title= 'Confusion matrix ' + net_name + " (" + crop_mode + ")",
+        title= 'Confusion matrix ' + net_name + " (" + crop_mode + ")" +number_train,
         ylabel='Ground truth',
         xlabel='Predicted')
 
@@ -235,7 +233,8 @@ for i in range(cm.shape[0]):
                 color="white" if cm[i, j] > thresh else "black")
 fig.tight_layout()
 
-#plt.show()
+#sklearn.metrics.confusion_matrix(y_true, y_pred, labels=labels_names, sample_weight=None, normalize=None)
+
 plt.savefig(freport_name + ".png")
 
 print("Execution time:" + str(time.time() - start))

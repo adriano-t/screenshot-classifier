@@ -1,18 +1,15 @@
-
 import os
 import sys
 import time
-from netinfo import *
+from netinfo import *# file containing features sizes and input sizes for all NN
 import numpy as np
 from keras.preprocessing import image
 
-#import tensorflow.python.util.deprecation as deprecation
-#deprecation._PRINT_DEPRECATION_WARNINGS = False
-
+#chosen NN, crop mode and n_img
 net_name = sys.argv[1]
 crop_mode = sys.argv[2]
 number_train = int(sys.argv[3])
-
+#take 4 poits of the image where cut it
 if(crop_mode != "full"):
     crop_modes = { 
         "bottom-right":  (4/5, 2/3, 1, 1), 
@@ -26,17 +23,16 @@ if(crop_mode != "full"):
     crop_y1 = mode[1]
     crop_x2 = mode[2]
     crop_y2 = mode[3]
-
+#create features
 start = time.time()
 dataset_path = "../dset/"
 features_path = "../features/"
 if(not os.path.exists(features_path)):
     os.mkdir(features_path)
-    
-
-# vgg16 / inception / mobilenet
 
 
+
+##### SELECT NN #####
 if(net_name == "vgg16"):
     from keras.applications.vgg16 import VGG16
     from keras.applications.vgg16 import preprocess_input as preprocess_vgg
@@ -79,6 +75,9 @@ if(net_name == "vgg19"):
     modelClass = VGG19
     preprocess_function = preprocess_vgg19
 
+
+
+#select size and input of net
 feat_size = features_sizes[net_name]
 input_size = input_sizes[net_name]
 
@@ -143,12 +142,4 @@ for game_dir in os.listdir(dataset_path):
     print("Saved to " + feat_file.name)
     
 
-
 print("Execution time:" + str(time.time() - start))
-
-
-'''
-# Per un elenco delle possibili reti, si veda
-# tabella "Documentation for individual models" su
-# https://keras.io/applications/
-# '''

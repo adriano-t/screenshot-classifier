@@ -2,34 +2,33 @@
 import os 
 import sys
 import time
-from netinfo import *
 import numpy as np
 from sklearn import svm
 from sklearn.externals import joblib
+from netinfo import * # file containing features sizes and input sizes for all NN
 
 #https://scikit-learn.org/stable/modules/svm.html
 
+#chosen NN and crop mode
 net_name = sys.argv[1]
 crop_mode = sys.argv[2]
-
+#check label.txt if exists
 label_path='../models/labels_' + net_name + '.txt'
 if os.path.exists(label_path):
     exit
-
+#from netinfo
 feat_size = features_sizes[net_name]
-
+#if not exists models,create it!
 if not os.path.exists('../models/'):
     os.mkdir('../models/')
-
-
+#load labels
 flabels=open(label_path, 'w')
+
 start = time.time()
 
 features_path = "../features/" + net_name+"/"+crop_mode+"/"
-
 all_labels =  np.array([])
 all_features = np.empty((0, feat_size), float)
-
 print("Loading features")
 label = 0
 
@@ -57,11 +56,6 @@ for fname in sorted(os.listdir(features_path)):
     label += 1
 
 flabels.close()
-        
-#TRAINING SVM
-#support vector classification SVC 
-# gamma='auto' uses 1 / n_features
-# gamma='scale' uses 1 / (n_features * X.var()) as value of gamma.
 
 print("Training model: " + str(all_features.shape))
 model = svm.SVC(gamma='scale', probability=True)
@@ -71,16 +65,3 @@ model.fit(all_features, all_labels)
 joblib.dump(model, '../models/' + net_name + "_" + crop_mode + '.model')
 
 print("Execution time:" + str(time.time() - start))
- 
-#todo
-# qui abbiamo il matricione di features + labels
-# dobbiamo fare il train della svm e salvare il modello in un file
-
-#in futuro dobbiamo fare il train solo con parte dei dati, ad esempio 80%train e 20%test
-
-
-#https://scikit-learn.org/stable/modules/svm.html
-
-
-
-

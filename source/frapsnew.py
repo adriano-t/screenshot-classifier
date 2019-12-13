@@ -3,6 +3,7 @@ import sys
 import time
 import pyscreenshot as ImageGrab 
 from datetime import datetime
+#gamename and directory path for the game to take screenshot 
 gameName = sys.argv[1]
 dirname = "../" + gameName + "/"
 

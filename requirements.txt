@@ -1,0 +1,7 @@
+sudo pip install keras
+sudo apt install python-pip
+pip install numpy
+pip install pillow
+pip install tensorflow
+pip install pyscreenshot
+
