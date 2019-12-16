@@ -209,7 +209,7 @@ mat_cm = confusion_matrix(y_true, y_pred)
 # print('Confusion ,matrix')
 # print(cm)
 
-# fig, ax = plt.subplots(figsize=(9,9))
+fig, ax = plt.subplots(figsize=(9,9))
 # im = ax.imshow(cm, interpolation='nearest', cmap=color_map)
 # ax.figure.colorbar(im, ax=ax)
 # # We want to show all ticks...
@@ -238,14 +238,13 @@ mat_cm = confusion_matrix(y_true, y_pred)
 # fig.tight_layout()
 
 #sklearn.metrics.confusion_matrix(y_true, y_pred, labels=labels_names, sample_weight=None, normalize=None)
-fig, ax = plt.subplots()
 
-im, cbar = heatmap(mat_cm, labels_names, labels_names, ax=ax,
+im, cbar = cm.heatmap(mat_cm, labels_names, labels_names, ax=ax,
                    cmap="YlGn", cbarlabel="#images")
-texts = annotate_heatmap(im, valfmt="{x:d}")
+texts = cm.annotate_heatmap(im, valfmt="{x:d}")
 
 fig.tight_layout()
-plt.show()
+
 
 plt.savefig(freport_name + ".png")
 
